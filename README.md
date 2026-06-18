@@ -1,5 +1,3 @@
-# ritual-fate-engine
-Experiments and community tools built around Ritual.
 # Ritual Fate Engine
 
 A community experiment inspired by Ritual, exploring interactive experiences, storytelling, and on-chain creativity.
@@ -11,7 +9,7 @@ A community experiment inspired by Ritual, exploring interactive experiences, st
 - Interactive storytelling mechanics
 
 ## Status
-🚧 In Development
+🚧 In Development — Building experimental experiences around Ritual.
 
 ## Built by
 Murat
@@ -23,5 +21,7 @@ Discord: murataydn34
 
 Try the Ritual Fate Engine here:
 https://ritual-fate-engine.netlify.app/
+
+## Preview
 
 <img width="1918" height="947" alt="image" src="https://github.com/user-attachments/assets/25e6018e-1ca5-4d49-976a-31e279051503" />
