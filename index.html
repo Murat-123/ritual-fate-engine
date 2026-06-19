@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ritual Fate Engine</title>
+</head>
+
+<body style="
+margin:0;
+font-family:sans-serif;
+color:white;
+text-align:center;
+overflow:hidden;
+">
+
+<!-- BACKGROUND -->
+<div style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:url('bg.png') center/cover no-repeat;
+filter:blur(8px) brightness(0.5);
+z-index:-2;
+"></div>
+
+<!-- DARK OVERLAY -->
+<div style="
+position:fixed;
+top:20px;
+right:20px;
+opacity:0.9;
+font-size:18px;
+font-weight:bold;
+letter-spacing:1px;
+">
+ritual.net
+</div>
+
+<!-- LOGO -->
+<img src="logo.png" style="
+position:fixed;
+top:20px;
+left:20px;
+width:55px;
+opacity:0.9;
+">
+
+<!-- ritual.net -->
+
+
+<!-- CARD -->
+<div style="
+margin-top:20px;
+display:inline-block;
+background:rgba(0,0,0,0.6);
+padding:35px;
+border-radius:20px;
+backdrop-filter:blur(12px);
+padding-bottom:120px;
+box-shadow:0 0 30px rgba(0,0,0,0.6);
+">
+
+<h1>Ritual Fate Engine</h1>
+<p>Let the ritual decide your path...</p>
+
+<br>
+
+<button onclick="connectWallet()" style="
+margin-bottom:15px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#16a34a;
+color:white;
+cursor:pointer;
+">
+🔗 Connect Wallet
+</button>
+
+<p id="wallet" style="font-size:12px;opacity:0.7;"></p>
+
+<button onclick="generate()" style="
+padding:12px 26px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#7c3aed,#9333ea);
+color:white;
+font-size:16px;
+cursor:pointer;
+">
+🔮 Reveal My Path
+</button>
+
+<br><br>
+
+<img id="result" width="300" style="
+border-radius:18px;
+transition:0.4s;
+"/>
+
+
+<br>
+
+<div style="display:flex; gap:12px; justify-content:center;">
+
+<button onclick="downloadImage()" style="
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#22c55e;
+color:white;
+cursor:pointer;
+">
+⬇ Download
+</button>
+
+<button onclick="shareX()" style="
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#1d9bf0;
+color:white;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:6px;
+">
+<img src="x.png" width="14">
+Share
+</button>
+
+</div>
+
+</div>
+
+<div style="margin-top:20px; font-size:12px; opacity:0.7;">
+
+<a href="https://x.com/murataydn_34" target="_blank" style="color:#22c55e;">
+X: @murataydn_34
+</a> |
+
+<span>Discord: murataydn34</span>
+
+<div style="margin-top:10px; font-size:12px; opacity:0.6;">
+Built on Ritual Testnet
+
+
+</div>
+
+
+<script>
+
+let currentPath = "";
+let userAddress = "";
+
+function generate(){
+
+  const paths = [
+    "boss",
+    "free",
+    "lazy",
+    "matrix",
+    "reader",
+    "transcend",
+    "warrior",
+    "wizard",
+    "ally",
+    "alpha",
+    "athlete",
+    "creator"
+  ];
+
+  const random = paths[Math.floor(Math.random()*paths.length)];
+
+  currentPath = random;
+
+  document.getElementById("result").src = random + ".jpg";
+const glowColors = {
+  boss: "gold",
+  free: "#ffffff",
+  lazy: "#66ff66",
+  matrix: "#ff00ff",
+  reader: "#99ff66",
+  transcend: "#ff4444",
+  warrior: "#ff3333",
+  wizard: "#00ccff",
+  ally: "#ffcc66",
+  alpha: "#00e5ff",
+  athlete: "#00ffee",
+  creator: "#bb55ff",
+};
+
+document.getElementById("result").style.boxShadow =
+  "0 0 25px " + glowColors[random] +
+  ", 0 0 50px " + glowColors[random];
+
+  if(userAddress){
+    if(confirm("Save this path on Ritual?")){
+      sendToRitual(random);
+    }
+  }
+
+}
+
+function downloadImage(){
+
+  if(!currentPath){
+    alert("Generate first");
+    return;
+  }
+
+  fetch(currentPath + ".jpg")
+    .then(res => res.blob())
+    .then(blob => {
+
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = currentPath + ".jpg";
+
+      document.body.appendChild(a);
+
+      a.click();
+
+      a.remove();
+    });
+
+}
+
+function shareX(){
+
+  if(!currentPath){
+    alert("Generate first");
+    return;
+  }
+
+  const url = "https://ritual-fate-engine.netlify.app/";
+
+  const text =
+"I revealed my Ritual path 🔮 (" +
+currentPath.toUpperCase() +
+")\n\nTry yours:\n" +
+url +
+"\n\nBuilt on @ritualnet" +
+"\nCreated by @murataydn_34";
+
+  window.open(
+    "https://twitter.com/intent/tweet?text=" +
+    encodeURIComponent(text),
+    "_blank"
+  );
+
+}
+
+async function sendToRitual(path){
+
+  
+  try{
+
+    const tx = await window.ethereum.request({
+
+  method: "eth_sendTransaction",
+
+  params: [{
+
+  from: userAddress,
+  to: userAddress,
+
+  value: "0x0"
+
+}]
+
+});
+
+   
+  alert("Saved on Ritual 🔮\nTX: " + tx);
+
+  }catch(err){
+
+    console.log(err);
+
+  }
+
+}
+
+async function switchToRitual(){
+
+  try{
+
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x7890ce" }]
+    });
+
+  }catch(err){
+
+    
+console.log(err);
+
+  }
+
+}
+
+async function connectWallet(){
+
+  if(typeof window.ethereum === "undefined"){
+    alert("Install Metamask");
+    return;
+  }
+
+  try{
+
+    const accounts =
+      await window.ethereum.request({
+        method: "eth_requestAccounts"
+      });
+
+    userAddress = accounts[0];
+
+    
+    document.getElementById("wallet").innerText =
+      "Connected: " +
+      userAddress.slice(0,6) +
+      "..." +
+      userAddress.slice(-4);
+
+  }catch(err){
+
+    console.log(err);
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
